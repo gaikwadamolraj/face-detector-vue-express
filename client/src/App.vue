@@ -4,18 +4,21 @@
     <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row fixed-top">
       <div class="container">
         <div class="navbar-brand float-left">
-           Face Detection App
+          Face Detection App
         </div>
-        
-        <ul class="nav navbar-nav flex-row float-right">
+
+        <ul class="nav navbar-nav flex-row float-right pl-1" v-if="!isLoggedIn">
           <li class="nav-item">
-            <router-link class="nav-link ml-3" to="/login">Sign in</router-link>
+            <router-link class="nav-link ml-1" to="/login">Sign in</router-link>
           </li>
-          <li class="nav-item" >
+
+          <li class="nav-item">
             <router-link class="btn btn-outline-primary" to="/signup">Sign up</router-link>
           </li>
-          <li class="nav-item" >
-            <router-link class="btn btn-outline-primary" to="/upload">Upload</router-link>
+        </ul>
+        <ul class="nav navbar-nav flex-row float-right" v-else="isLoggedIn">
+          <li class="nav-item">
+            <router-link class="nav-link ml-2" to="/login">Sign out</router-link>
           </li>
         </ul>
       </div>
@@ -23,7 +26,7 @@
     <!-- Main -->
     <div class="App">
       <div class="vertical-center">
-          <router-view />
+        <router-view />
       </div>
     </div>
   </div>
@@ -33,7 +36,7 @@ export default {
   name: 'App',
   data: function () {
     return {
-      loggedIn: localStorage.length ? true : false
+      isLoggedIn: !localStorage.getItem('token') ? false : true
     }
   }
 }

@@ -40,7 +40,7 @@ export default {
                 await register({ email: this.email, password: this.password });
                 this.$router.replace('/login');
             } catch (error) {
-                this.errorMessage = error.response.data.errors[0].detail
+                this.errorMessage = error.response.data.errors[0].detail || error?.message || 'Failed to create new user'
             }
         }
     },

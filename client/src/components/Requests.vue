@@ -2,7 +2,7 @@
   <div class="row d-flex justify-content-center">
     <!--Grid column-->
     <div class="col-md-6">
-      
+      <router-link class="btn btn-outline-primary" to="/upload">Upload</router-link>
       <table class="table">
         <thead>
           <tr>
@@ -37,28 +37,29 @@ export default {
   methods: {
     async Requests() {
       try {
-        const res  = await requests()
+        const res = await requests()
         this.requests = res.data
       } catch (error) {
         if (error.response.status === 401) {
-            this.$router.replace('/login')
+          this.$router.replace('/login')
         }
       }
     }
   },
   mounted() {
     const token = localStorage.getItem('token');
-    if(token) {
+    if (token) {
       this.Requests();
     } else {
       this.$router.replace('/login')
     }
   },
-  created(){
-    this.interval = setInterval(() =>{
-      this.Requests()},3000)
+  created() {
+    this.interval = setInterval(() => {
+      this.Requests()
+    }, 3000)
   },
-  destroyed(){
+  destroyed() {
     clearInterval(this.interval)
   }
 }

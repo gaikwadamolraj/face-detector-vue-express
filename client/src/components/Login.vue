@@ -35,13 +35,13 @@ export default {
         handleSignIn: async function () {
             try {
                 const res = await login({ email: this.email, password: this.password });
-                const {token} = res.data
+                const { token } = res.data
                 console.log('token ', token);
                 localStorage.clear();
                 localStorage.setItem('token', token)
                 this.$router.replace('/requests');
             } catch (error) {
-                this.errorMessage = error.response.data.errors[0].detail
+                this.errorMessage = error.response.data.errors[0].detail || error?.message || 'Failed to login'
             }
         }
     }
