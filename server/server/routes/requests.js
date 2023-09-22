@@ -3,8 +3,11 @@ import multer from 'multer';
 import path from 'path';
 import { v1 } from 'uuid';
 import { detectAllFaces } from '../utils/index.js';
+import EventEmitter from 'events';
 
 const router = express.Router();
+
+const myEmitter = new EventEmitter();
 
 let requests = [
     {
@@ -14,14 +17,33 @@ let requests = [
         path: '/api/resources/static/uploads/1695373591098-Amol_Profile.jpg',
         faces: 1,
     },
-    {
-        id: 2,
-        name: 'snehal',
-        status: 'completed',
-        path: '/api/resources/static/uploads/1695373591098-Amol_Profile.jpg',
-        faces: 1,
-    },
 ];
+const getFaces = (imagePath) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve([{ id: 1 }, { id: 2 }]);
+        }, 5000);
+    });
+};
+
+const updateRequestsWithFaces = async (data) => {
+    // Actual Google Cloud Vision method
+    // const faces = await detectAllFaces(imagePath);
+
+    // As of now working with mock method
+    const faces = await getFaces(data.imagePath);
+    requests = requests.map((ele) => {
+        if (ele.id === data.id) {
+            ele.faces = faces.length;
+            ele.status = 'completed';
+        }
+        return ele;
+    });
+};
+
+// Register the function
+myEmitter.on('detectFaces', updateRequestsWithFaces);
+
 router.get('/', async (req, res) => {
     try {
         res.json(requests);
@@ -98,32 +120,31 @@ router.post('/', async (req, res) => {
             //             file.filename,
             //     };
             // });
-
-            requests.push({
+            const request = {
                 id: v1(),
                 name: req.body.text,
                 status: 'queued',
-                faces: 0
-            });
-            const { filename, originalname } = req.files[0]
-            const request = {
+                faces: 0,
+            };
+
+            requests.push(request);
+            const { filename, originalname } = req.files[0];
+            const reqResponse = {
                 mediaName: filename,
                 origMediaName: originalname,
-                mediaSource:
-                    `http://${req.headers.host}/api/static/resources/static/uploads/${filename}`,
-            }
+                mediaSource: `http://${req.headers.host}/api/static/resources/static/uploads/${filename}`,
+            };
             const imagePath = path.join(
                 __basedir,
                 `/resources/static/uploads/${request.mediaName}`
             );
-            // detectAllFaces(imagePath).then(faces => {
-            //     return res.status(201).json({...request, ...{faces: faces.length}});
-            // })
 
-            return res.status(201).json({ ...request, ...{ faces: 0 } });
+            // Emitter will do our job in backend.
+            // Future we will move to MQ system
+            myEmitter.emit('detectFaces', { id: request.id, imagePath });
+
+            return res.status(201).json(reqResponse);
         });
-        // from here we can call the gcloud function. Tested and code is working for the same
-        //await detectAllFaces(imagePath);
     } catch (err) {
         console.error(
             `Error occured while getting creating the request with file upload `,
