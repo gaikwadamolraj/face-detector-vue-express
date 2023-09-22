@@ -12,12 +12,14 @@ let requests = [
         name: 'sample',
         status: 'queued',
         path: '/api/resources/static/uploads/1695373591098-Amol_Profile.jpg',
+        faces: 1,
     },
     {
         id: 2,
         name: 'snehal',
         status: 'completed',
         path: '/api/resources/static/uploads/1695373591098-Amol_Profile.jpg',
+        faces: 1,
     },
 ];
 router.get('/', async (req, res) => {
@@ -73,37 +75,51 @@ router.post('/', async (req, res) => {
                 callback(null, path.join(__basedir, '/resources/static/uploads/'));
             },
             filename: (req, file, callback) => {
-                callback(null, Date.now() + '-' + file.originalname);
+                callback(null, `${Date.now()}-${file.originalname}`);
             },
         });
 
         const upload = multer({ storage: storage }).any('file');
         upload(req, res, (err) => {
-            console.error(`Error occured while upload the image `, err);
             if (err) {
                 return res.status(400).send({
                     message: err,
                 });
             }
 
-            let results = req.files.map((file) => {
-                return {
-                    mediaName: file.filename,
-                    origMediaName: file.originalname,
-                    mediaSource:
-                        'http://' +
-                        req.headers.host +
-                        '/api/static/resources/static/uploads/' +
-                        file.filename,
-                };
-            });
+            // let results = req.files.map((file) => {
+            //     return {
+            //         mediaName: file.filename,
+            //         origMediaName: file.originalname,
+            //         mediaSource:
+            //             'http://' +
+            //             req.headers.host +
+            //             '/api/static/resources/static/uploads/' +
+            //             file.filename,
+            //     };
+            // });
 
             requests.push({
                 id: v1(),
                 name: req.body.text,
                 status: 'queued',
             });
-            res.status(200).json(results);
+            const { filename, originalname } = req.files[0]
+            const request = {
+                mediaName: filename,
+                origMediaName: originalname,
+                mediaSource:
+                    `http://${req.headers.host}/api/static/resources/static/uploads/${filename}`,
+            }
+            const imagePath = path.join(
+                __basedir,
+                `/resources/static/uploads/${request.mediaName}`
+            );
+            // detectAllFaces(imagePath).then(faces => {
+            //     return res.status(201).json({...request, ...{faces: faces.length}});
+            // })
+
+            return res.status(201).json({ ...request, ...{ faces: 0 } });
         });
         // from here we can call the gcloud function. Tested and code is working for the same
         //await detectAllFaces(imagePath);
