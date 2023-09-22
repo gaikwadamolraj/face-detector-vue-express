@@ -17,7 +17,9 @@
             <td>{{ request.name }}</td>
             <td>{{ request.status }}</td>
             <td>{{ request.faces }}</td>
-            <td><img height="50" width="50" src="/api/static/resources/static/uploads/amol.jpg"></td>
+            <td>
+              <img :src="request.path" height="50" width="50">
+            </td>
           </tr>
         </tbody>
       </table>
@@ -43,6 +45,7 @@ export default {
         this.requests = res.data
       } catch (error) {
         if (error.response.status === 401) {
+          localStorage.removeItem('token')
           this.$router.replace('/login')
         }
       }

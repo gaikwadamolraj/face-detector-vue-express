@@ -1,7 +1,7 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
-import cors from "cors"
+import express from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import usersRoute from './routes/users.js';
 import requestsRoute from './routes/requests.js';
 import { authenticate } from './middleware/authenticate.js';
@@ -9,9 +9,9 @@ import { authenticate } from './middleware/authenticate.js';
 const app = express();
 const port = process.env.PORT || 5000;
 
-global.__basedir = process.cwd()
+global.__basedir = process.cwd();
 
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -25,19 +25,19 @@ app.use('/api/users', usersRoute);
 // Return not implemented method
 app.use(function (req, res) {
   res.status(501).json({
-    error: 'Method not implemented'
+    error: 'Method not implemented',
   });
 });
 
 // Catch unhandled error
 app.use(function (err, req, res, next) {
   if (!err) {
-    next()
+    next();
   }
-  res.status(500).json({ error: "Internal server error" })
+  res.status(500).json({ error: 'Internal server error' });
 });
 
-// Application start 
+// Application start
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

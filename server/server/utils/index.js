@@ -21,7 +21,9 @@ export const createToken = (data) =>
 
 export const verifyToken = (token) => jwt.verify(token, KEY);
 
-export const createHash = async (data) => await hash(data, await genSalt(parseInt(saltRound)));
+export const createHash = async (data) =>
+  await hash(data, await genSalt(parseInt(saltRound)));
+
 export const compareHash = async (hash, plainText) =>
   await compare(plainText, hash);
 
