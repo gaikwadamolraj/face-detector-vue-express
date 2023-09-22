@@ -103,6 +103,7 @@ router.post('/', async (req, res) => {
                 id: v1(),
                 name: req.body.text,
                 status: 'queued',
+                faces: 0
             });
             const { filename, originalname } = req.files[0]
             const request = {

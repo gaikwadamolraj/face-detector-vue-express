@@ -12,3 +12,8 @@ services:
     container_name: server
     ports:
       - 5000:5000
+    # We can pass env from here if not then it will take the default
+    # environment:
+    #   - TOKEN_EXPIRY=30m
+    #   - TOKEN_KEY=$@mp1e
+    #   - SALT_ROUND=10

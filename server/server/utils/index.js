@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken';
 import { genSalt, hash, compare } from 'bcrypt';
 import vision from '@google-cloud/vision';
 
-const KEY = process.env.KEY || 'sample'
-const saltRound = process.env.SALT_ROUND || 10
+const KEY = process.env.TOKEN_KEY || '$@mp1e';
+const saltRound = process.env.SALT_ROUND || 10;
 
 export const isEmail = (email) => {
   if (typeof email !== 'string') {

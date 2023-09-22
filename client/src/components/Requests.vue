@@ -2,12 +2,13 @@
   <div class="row d-flex justify-content-center">
     <!--Grid column-->
     <div class="col-md-6">
-      <router-link class="btn btn-outline-primary" to="/upload">Upload</router-link>
+      <router-link class="btn btn-outline-primary float-right pl-1" to="/upload">New Request</router-link>
       <table class="table">
         <thead>
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Status</th>
+            <th scope="col">Faces</th>
             <th scope="col">Source</th>
           </tr>
         </thead>
@@ -15,6 +16,7 @@
           <tr v-for="request in requests" :key="request.id">
             <td>{{ request.name }}</td>
             <td>{{ request.status }}</td>
+            <td>{{ request.faces }}</td>
             <td><img height="50" width="50" src="/api/static/resources/static/uploads/amol.jpg"></td>
           </tr>
         </tbody>
