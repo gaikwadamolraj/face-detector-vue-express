@@ -36,8 +36,7 @@ export default {
             try {
                 const res = await login({ email: this.email, password: this.password });
                 const { token } = res.data
-                console.log('token ', token);
-                localStorage.clear();
+                localStorage.removeItem('token')
                 localStorage.setItem('token', token)
                 this.$router.replace('/requests');
             } catch (error) {

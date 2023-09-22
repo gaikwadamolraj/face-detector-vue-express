@@ -51,9 +51,7 @@ export default {
     },
     mounted() {
         const token = localStorage.getItem('token');
-        if (token) {
-            this.Requests();
-        } else {
+        if (!token) {
             this.$router.replace('/login')
         }
     }

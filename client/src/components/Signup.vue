@@ -45,7 +45,7 @@ export default {
         }
     },
     mounted() {
-        localStorage.clear()
+        localStorage.removeItem('token')
     }
 }
 </script>
