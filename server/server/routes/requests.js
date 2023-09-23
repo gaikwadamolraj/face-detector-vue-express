@@ -1,63 +1,22 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import { v1 } from 'uuid';
-import { detectAllFaces } from '../utils/index.js';
-import EventEmitter from 'events';
 
-const REQUEST_STATUS = {
-  COMPLETED: 'Completed',
-  PROCESS: 'Processing',
-  QUEUED: 'Queued',
-};
+import { EVENT_TYPES, emitEvent } from '../utils/eventsManger.js';
+import {
+  REQUEST_STATUS,
+  getReqById,
+  getRequests,
+  saveRequest,
+  updateStatusRequestById,
+} from '../models/request.js';
+import { getUUID } from '../utils/index.js';
+
 const router = express.Router();
-
-const myEmitter = new EventEmitter();
-
-let requests = [
-  {
-    id: '12321-sdfs',
-    name: 'sample',
-    status: REQUEST_STATUS.COMPLETED,
-    path: '/api/static/resources/static/uploads/amol.jpg',
-    faces: 1,
-  },
-];
-const getFaces = (imagePath) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([{ id: 1 }, { id: 2 }]);
-    }, 5000);
-  });
-};
-
-const updateStatusRequestById = (id, reqObj) => {
-  requests = requests.map((ele) => {
-    if (ele.id === id) {
-      ele = { ...ele, ...reqObj };
-    }
-    return ele;
-  });
-};
-const updateRequestsWithFaces = async (data) => {
-  // Actual Google Cloud Vision method
-  // const faces = await detectAllFaces(imagePath);
-
-  updateStatusRequestById(data.id, { status: REQUEST_STATUS.PROCESS });
-  // As of now working with mock method
-  const faces = await getFaces(data.imagePath);
-  updateStatusRequestById(data.id, {
-    faces: faces.length,
-    status: REQUEST_STATUS.COMPLETED,
-  });
-};
-
-// Register the function
-myEmitter.on('detectFaces', updateRequestsWithFaces);
 
 router.get('/', async (req, res) => {
   try {
-    res.json(requests);
+    res.json(getRequests());
   } catch (err) {
     console.error(`Error occured while getting all the requests `, err);
     res.status(500).json({
@@ -75,7 +34,7 @@ router.patch('/:id', async (req, res) => {
     const { status } = req.body;
     const { id } = req.params;
 
-    const request = requests.find((request) => request.id === id);
+    const request = getReqById(id);
     if (!request) {
       throw new Error('Request not found');
     }
@@ -139,18 +98,18 @@ router.post('/', async (req, res) => {
       };
 
       const request = {
-        id: v1(),
+        id: getUUID(),
         name: req.body.text,
         status: REQUEST_STATUS.QUEUED,
         faces: 0,
         path: urlPath,
       };
 
-      requests.push(request);
+      saveRequest(request);
 
       // Emitter will do our job in backend.
       // Future we will move to MQ system
-      myEmitter.emit('detectFaces', {
+      emitEvent(EVENT_TYPES.DETECT_FACES, {
         id: request.id,
         imagePath: path.join(__basedir, imagePath),
       });

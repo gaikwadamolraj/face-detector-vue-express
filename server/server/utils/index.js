@@ -1,10 +1,13 @@
 import jwt from 'jsonwebtoken';
 import { genSalt, hash, compare } from 'bcrypt';
 import vision from '@google-cloud/vision';
+import { v1 } from 'uuid';
 
+//Key should not pass as hard coded. It should come from runtime env
 const KEY = process.env.TOKEN_KEY || '$@mp1e';
 const saltRound = process.env.SALT_ROUND || 10;
 
+export const getUUID = () => v1();
 export const isEmail = (email) => {
   if (typeof email !== 'string') {
     return false;
