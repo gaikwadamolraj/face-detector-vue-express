@@ -1,4 +1,3 @@
-import express from 'express';
 import {
   compareHash,
   createToken,
@@ -6,10 +5,9 @@ import {
   isEmail,
 } from '../utils/index.js';
 
-const router = express.Router();
-
 const users = [];
-router.post('/register', async (req, res) => {
+
+export const register = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!isEmail(email)) {
@@ -40,9 +38,9 @@ router.post('/register', async (req, res) => {
       ],
     });
   }
-});
+};
 
-router.post('/login', async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!isEmail(email)) {
@@ -96,6 +94,4 @@ router.post('/login', async (req, res) => {
       ],
     });
   }
-});
-
-export default router;
+};

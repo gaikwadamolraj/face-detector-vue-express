@@ -2,9 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import usersRoute from './routes/users.js';
-import requestsRoute from './routes/requests.js';
-import { authenticate } from './middleware/authenticate.js';
+import apiRoutes from './routes/index.js';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,8 +17,7 @@ app.use(cookieParser());
 app.use('/api/static', express.static(__basedir));
 
 //Routes
-app.use('/api/requests', authenticate, requestsRoute);
-app.use('/api/users', usersRoute);
+app.use('/api', apiRoutes);
 
 // Return not implemented method
 app.use(function (req, res) {

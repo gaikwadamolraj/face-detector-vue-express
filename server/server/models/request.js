@@ -45,8 +45,9 @@ export const updateRequestsWithFaces = async (data) => {
   });
 };
 
-export const getRequests = () => requests;
+export const fetchRequests = () => requests;
 
-export const getReqById = (id) => requests.find((request) => request.id === id);
+export const fetchReqById = (id) =>
+  requests.find((request) => request.id === id);
 
 export const saveRequest = (request) => requests.push(request);

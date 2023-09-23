@@ -1,22 +1,18 @@
-import express from 'express';
 import multer from 'multer';
 import path from 'path';
-
 import { EVENT_TYPES, emitEvent } from '../utils/eventsManger.js';
 import {
   REQUEST_STATUS,
-  getReqById,
-  getRequests,
+  fetchReqById,
+  fetchRequests,
   saveRequest,
   updateStatusRequestById,
 } from '../models/request.js';
 import { getUUID } from '../utils/index.js';
 
-const router = express.Router();
-
-router.get('/', async (req, res) => {
+export const getRequests = async (req, res) => {
   try {
-    res.json(getRequests());
+    res.json(fetchRequests());
   } catch (err) {
     console.error(`Error occured while getting all the requests `, err);
     res.status(500).json({
@@ -27,14 +23,14 @@ router.get('/', async (req, res) => {
       ],
     });
   }
-});
+};
 
-router.patch('/:id', async (req, res) => {
+export const patchRequest = async (req, res) => {
   try {
     const { status } = req.body;
     const { id } = req.params;
 
-    const request = getReqById(id);
+    const request = fetchReqById(id);
     if (!request) {
       throw new Error('Request not found');
     }
@@ -54,9 +50,9 @@ router.patch('/:id', async (req, res) => {
       ],
     });
   }
-});
+};
 
-router.post('/', async (req, res) => {
+export const createNew = async (req, res) => {
   try {
     const resourcePath = '/resources/static/uploads/';
     const storage = multer.diskStorage({
@@ -131,6 +127,4 @@ router.post('/', async (req, res) => {
       ],
     });
   }
-});
-
-export default router;
+};
