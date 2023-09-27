@@ -101,7 +101,6 @@ export const createNew = async (req, res) => {
         path: urlPath,
         userEmail: req.user.email,
       };
-      console.log('request  ', request);
       saveRequest(request);
 
       // Emitter will do our job in backend.
