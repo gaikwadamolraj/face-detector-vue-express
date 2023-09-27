@@ -35,9 +35,11 @@ export default {
         handleSignIn: async function () {
             try {
                 const res = await login({ email: this.email, password: this.password });
-                const { token } = res.data
-                localStorage.removeItem('token')
+                const { token, user } = res.data
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
                 localStorage.setItem('token', token)
+                localStorage.setItem('user', user)
                 this.$router.replace('/requests');
             } catch (error) {
                 this.errorMessage = error.response.data.errors[0].detail || error?.message || 'Failed to login'

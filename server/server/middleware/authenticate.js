@@ -1,4 +1,5 @@
-import { verifyToken } from '../utils/index.js';
+import { getUserByEmail, isAdmin } from '../models/user.js';
+import { decodeToken, verifyToken } from '../utils/index.js';
 
 export const authenticate = async (req, res, next) => {
   try {
@@ -9,6 +10,13 @@ export const authenticate = async (req, res, next) => {
       throw new Error('Invalid token');
     }
 
+    const tokenData = decodeToken(token);
+    const user = getUserByEmail(tokenData.email);
+    if (!user) {
+      throw new Error('Invalid token');
+    }
+
+    req.user = { id: user.id, email: user.email, isAdmin: isAdmin(user) };
     next();
   } catch (err) {
     console.error(err);

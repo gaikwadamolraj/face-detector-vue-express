@@ -3,8 +3,8 @@ import path from 'path';
 import { EVENT_TYPES, emitEvent } from '../utils/eventsManger.js';
 import {
   REQUEST_STATUS,
-  fetchReqById,
-  fetchRequests,
+  fetchReqByIdByUser,
+  fetchRequestsByUser,
   saveRequest,
   updateStatusRequestById,
 } from '../models/request.js';
@@ -12,7 +12,7 @@ import { getUUID } from '../utils/index.js';
 
 export const getRequests = async (req, res) => {
   try {
-    res.json(fetchRequests());
+    res.json(fetchRequestsByUser(req));
   } catch (err) {
     console.error(`Error occured while getting all the requests `, err);
     res.status(500).json({
@@ -30,7 +30,7 @@ export const patchRequest = async (req, res) => {
     const { status } = req.body;
     const { id } = req.params;
 
-    const request = fetchReqById(id);
+    const request = fetchReqByIdByUser(id, req.user.email);
     if (!request) {
       throw new Error('Request not found');
     }
@@ -99,8 +99,9 @@ export const createNew = async (req, res) => {
         status: REQUEST_STATUS.QUEUED,
         faces: 0,
         path: urlPath,
+        userEmail: req.user.email,
       };
-
+      console.log('request  ', request);
       saveRequest(request);
 
       // Emitter will do our job in backend.

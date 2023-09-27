@@ -10,9 +10,10 @@ let requests = [
   {
     id: '12321-sdfs',
     name: 'sample',
-    status: REQUEST_STATUS.COMPLETED,
+    status: REQUEST_STATUS.PROCESS,
     path: '/api/static/resources/static/uploads/amol.jpg',
     faces: 1,
+    userEmail: 'a@a.com',
   },
 ];
 
@@ -45,9 +46,17 @@ export const updateRequestsWithFaces = async (data) => {
   });
 };
 
-export const fetchRequests = () => requests;
+export const fetchRequestsByUser = (req) => {
+  if (req.isAdmin) {
+    return requests;
+  } else {
+    return requests.filter((userReq) => userReq.userEmail === req.user.email);
+  }
+};
 
-export const fetchReqById = (id) =>
-  requests.find((request) => request.id === id);
+export const fetchReqByIdByUser = (id, userEmail) =>
+  requests.find(
+    (request) => request.id === id && request.userEmail === userEmail
+  );
 
 export const saveRequest = (request) => requests.push(request);

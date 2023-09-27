@@ -17,12 +17,16 @@ export const isEmail = (email) => {
   return emailRegex.test(email);
 };
 
-export const createToken = (data) =>
-  jwt.sign(data, KEY, {
+export const createToken = (user) => {
+  const data = { email: user.email, id: user.id };
+  return jwt.sign(data, KEY, {
     expiresIn: process.env.TOKEN_EXPIRY || '30m',
   });
+};
 
 export const verifyToken = (token) => jwt.verify(token, KEY);
+
+export const decodeToken = (token) => jwt.decode(token, KEY);
 
 export const createHash = async (data) =>
   await hash(data, await genSalt(parseInt(saltRound)));
