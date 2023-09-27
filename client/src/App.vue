@@ -7,7 +7,7 @@
           Face Detection App
         </div>
 
-        <ul class="nav navbar-nav flex-row float-right pl-1" >
+        <ul class="nav navbar-nav flex-row float-right pl-1" v-if="!isLoggedIn">
           <li class="nav-item">
             <router-link class="nav-link ml-1" to="/login">Sign in</router-link>
           </li>
@@ -16,11 +16,11 @@
             <router-link class="btn btn-outline-primary" to="/signup">Sign up</router-link>
           </li>
         </ul>
-        <!-- <ul class="nav navbar-nav flex-row float-right" v-else="isLoggedIn">
+        <ul class="nav navbar-nav flex-row float-right" v-else="isLoggedIn">
           <li class="nav-item">
             <router-link class="nav-link ml-2" to="/login">Sign out</router-link>
           </li>
-        </ul> -->
+        </ul>
       </div>
     </nav>
     <!-- Main -->
