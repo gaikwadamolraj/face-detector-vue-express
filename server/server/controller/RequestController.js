@@ -84,6 +84,10 @@ export const createNew = async (req, res) => {
       //     };
       // });
 
+      if (!req?.files?.[0]) {
+        throw new Error('Upload file not found');
+      }
+
       const { filename, originalname } = req.files[0];
       const imagePath = resourcePath + filename;
       const urlPath = `/api/static/${imagePath}`;

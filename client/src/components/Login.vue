@@ -21,7 +21,7 @@
     </div>
 </template>
 <script>
-import { login } from "../services/auth"
+import { clearAllStoreData, login, setStoreData, STORE_KEY } from "../services/auth"
 export default {
     name: 'Login',
     data: function () {
@@ -36,15 +36,19 @@ export default {
             try {
                 const res = await login({ email: this.email, password: this.password });
                 const { token, user } = res.data
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                localStorage.setItem('token', token)
-                localStorage.setItem('user', user)
+                clearAllStoreData()
+                setStoreData(STORE_KEY.TOKEN, token)
+                setStoreData(STORE_KEY.USER, JSON.stringify(user))
+                // localStorage.setItem('token', token)
+                // localStorage.setItem('user', user)
                 this.$router.replace('/requests');
             } catch (error) {
-                this.errorMessage = error.response.data.errors[0].detail || error?.message || 'Failed to login'
+                this.errorMessage = error?.response?.data?.errors?.[0].detail || error?.message || 'Failed to login'
             }
         }
+    },
+    mounted() {
+        clearAllStoreData();
     }
 }
 </script>

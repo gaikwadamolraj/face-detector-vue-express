@@ -10,7 +10,7 @@ let requests = [
   {
     id: '12321-sdfs',
     name: 'sample',
-    status: REQUEST_STATUS.PROCESS,
+    status: REQUEST_STATUS.COMPLETED,
     path: '/api/static/resources/static/uploads/amol.jpg',
     faces: 1,
     userEmail: 'a@a.com',
@@ -47,7 +47,7 @@ export const updateRequestsWithFaces = async (data) => {
 };
 
 export const fetchRequestsByUser = (req) => {
-  if (req.isAdmin) {
+  if (req.user.isAdmin) {
     return requests;
   } else {
     return requests.filter((userReq) => userReq.userEmail === req.user.email);

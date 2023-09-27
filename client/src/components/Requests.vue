@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import { requests } from "../services/requests"
+import { clearAllStoreData, isAdmin } from "@/services/auth"
+import { fetchRequests, isReqInProcess } from "../services/requests"
 export default {
   name: 'Requests',
   data() {
@@ -39,13 +40,28 @@ export default {
     }
   },
   methods: {
-    async Requests() {
+    clearPollingCall() {
+      if(this.interval) {
+        const isAdminUser = isAdmin();
+        // Clear req only for non admin user.
+        if(!isAdminUser) {
+          clearInterval(this.interval)
+        }
+      }
+    },
+    async getRequests() {
       try {
-        const res = await requests()
-        this.requests = res.data
+        const allRequests = await fetchRequests();
+        const anyInProcess = isReqInProcess(allRequests);
+        
+        if(!anyInProcess) {
+          this.clearPollingCall()
+        }
+        this.requests = allRequests;
       } catch (error) {
-        if (error.response.status === 401) {
-          localStorage.removeItem('token')
+        console.log('err ', error)
+        if (error?.response?.status === 401) {
+          clearAllStoreData();
           this.$router.replace('/login')
         }
       }
@@ -54,18 +70,18 @@ export default {
   mounted() {
     const token = localStorage.getItem('token');
     if (token) {
-      this.Requests();
+      this.getRequests();
     } else {
       this.$router.replace('/login')
     }
   },
   created() {
     this.interval = setInterval(() => {
-      this.Requests()
+      this.getRequests()
     }, 3000)
   },
   destroyed() {
-    clearInterval(this.interval)
+    this.clearPollingCall()
   }
 }
 </script>

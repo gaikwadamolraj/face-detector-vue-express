@@ -37,6 +37,15 @@ export default {
             const file = this.$refs.fileInput.files[0];
 
             let formData = new FormData();
+            if(!file || !file?.name) {
+                this.errorMessage = 'Please select the file'
+                return
+            }
+            if(!this.textInput) {
+                this.errorMessage = 'Please enter the text'
+                return
+            }
+
             formData.append("file", file);
             formData.append("text", this.textInput);
 

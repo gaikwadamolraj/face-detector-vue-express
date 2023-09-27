@@ -30,7 +30,7 @@
     </div>
 </template>
 <script>
-import { register } from "../services/auth"
+import { clearAllStoreData, register } from "../services/auth"
 export default {
     name: 'FormSignup',
     data: function () {
@@ -52,7 +52,8 @@ export default {
         }
     },
     mounted() {
-        localStorage.removeItem('token')
+        //localStorage.removeItem('token')
+        clearAllStoreData();
     }
 }
 </script>
