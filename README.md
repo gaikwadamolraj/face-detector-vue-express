@@ -18,7 +18,7 @@ docker compose build
 docker compose up
 ```
 
-## Access the below url
+## Access the <a href="http://localhost:80" target="_blank" rel="Vue App">url</a>
 
 ```sh
 http://localhost:80/
