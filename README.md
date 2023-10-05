@@ -6,6 +6,12 @@
 docker compose build
 ```
 
+## Pass the correct file and file path to compose for gcp auth
+
+```sh
+    face-detector-vue-express/server/application_default_credentials.json
+```
+
 ## Run the client and server
 
 ```sh
@@ -15,7 +21,7 @@ docker compose up
 ## Access the below url
 
 ```sh
-http://localhost:3001/
+http://localhost:80/
 ```
 
 ### Author

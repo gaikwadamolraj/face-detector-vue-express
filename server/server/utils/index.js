@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { genSalt, hash, compare } from 'bcrypt';
-import vision from '@google-cloud/vision';
 import { v1 } from 'uuid';
+import { fetchFacesFromVision } from './googleVision.js';
 
 //Key should not pass as hard coded. It should come from runtime env
 const KEY = process.env.TOKEN_KEY || '$@mp1e';
@@ -34,21 +34,10 @@ export const createHash = async (data) =>
 export const compareHash = async (hash, plainText) =>
   await compare(plainText, hash);
 
-export const detectAllFaces = async (imagePath) => {
+export const detectAllFaces = async ({ imagePath }) => {
   try {
-    const client = new vision.ImageAnnotatorClient();
-    const [result] = await client.faceDetection(imagePath);
-    const faces = result.faceAnnotations;
-    console.log('Faces:', faces.length);
-    faces.forEach((face, i) => {
-      console.log(`  Face #${i + 1}:`);
-      console.log(`    Joy: ${face.joyLikelihood}`);
-      console.log(`    Anger: ${face.angerLikelihood}`);
-      console.log(`    Sorrow: ${face.sorrowLikelihood}`);
-      console.log(`    Surprise: ${face.surpriseLikelihood}`);
-    });
-
-    return faces;
+    const result = await fetchFacesFromVision({ imagePath });
+    return result.faceAnnotations;
   } catch (err) {
     console.error('Failed to detect the faces with error ', err);
     return [];

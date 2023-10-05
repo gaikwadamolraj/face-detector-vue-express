@@ -41,7 +41,7 @@ export default {
                 setStoreData(STORE_KEY.USER, JSON.stringify(user))
                 // localStorage.setItem('token', token)
                 // localStorage.setItem('user', user)
-                this.$router.replace('/requests');
+                this.$router.replace('/');
             } catch (error) {
                 this.errorMessage = error?.response?.data?.errors?.[0].detail || error?.message || 'Failed to login'
             }

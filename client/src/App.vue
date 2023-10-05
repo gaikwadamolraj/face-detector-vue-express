@@ -18,7 +18,8 @@
         </ul>
         <ul class="nav navbar-nav flex-row float-right" v-else="isLoggedIn">
           <li class="nav-item">
-            <router-link class="nav-link ml-2" to="/login">Sign out</router-link>
+            <!-- <router-link class="nav-link ml-2" to="/login">Sign out</router-link> -->
+            <button v-on:click="handleSignOut" >Sign Out</button>
           </li>
         </ul>
       </div>
@@ -38,6 +39,12 @@ export default {
     return {
       isLoggedIn: !localStorage.getItem('token') ? false : true
     }
-  }
+  },
+  methods: {
+        async handleSignOut() {
+            localStorage.removeItem('token')
+            // this.$router.replace('/');
+        },
+    },
 }
 </script>

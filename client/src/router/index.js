@@ -3,6 +3,11 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 const routes = [
   {
+    path: "/",
+    name: "home",
+    component: () => import("../components/Home.vue"),
+  },
+  {
     path: "/requests",
     name: "requests",
     component: () => import("../components/Requests.vue"),

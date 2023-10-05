@@ -35,13 +35,15 @@ export const updateStatusRequestById = (id, reqObj) => {
 };
 export const updateRequestsWithFaces = async (data) => {
   // Actual Google Cloud Vision method
-  const faces = await detectAllFaces(data.imagePath);
+  const faces = await detectAllFaces({ imagePath: data.imagePath });
 
   updateStatusRequestById(data.id, { status: REQUEST_STATUS.PROCESS });
   // As of now working with mock method
   // const faces = await getFaces(data.imagePath);
+  const numFaces = faces.length;
+  console.log(`Found ${numFaces} faces`);
   updateStatusRequestById(data.id, {
-    faces: faces.length,
+    faces: numFaces,
     status: REQUEST_STATUS.COMPLETED,
   });
 };

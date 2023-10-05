@@ -16,6 +16,7 @@ export const register = async (req, res) => {
       throw new Error('Password must be a string.');
     }
     const hash = await createHash(password);
+    console.log(' user ', hash, password);
     const user = getUserByEmail(email);
     if (user) {
       throw new Error('username already registerd.');
