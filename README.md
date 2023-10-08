@@ -24,6 +24,9 @@ docker compose up
 http://localhost:80/
 ```
 
+## Demo Video:
+https://github.com/gaikwadamolraj/face-detector-vue-express/blob/main/video/GoogleVisionDemoLocal.mov
+
 ### Author
 
 Amol Gaikwad
